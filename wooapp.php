@@ -7,10 +7,49 @@ Author URI:   https://shamss-elhadidi.com/
 Description:  ًWooCommerce restful api for flutter app
 Version:      0.0.1
 Text Domain:  wooapp
+@package wooapp
+Namespace wooapp
 */
+defined('ABSPATH') or die('No Script kiddies Please');
 
 //ToDo: Add api_token to users table
+
+register_activation_hook(__FILE__, 'spf_install_plugin');
+
+function spf_install_plugin(){
+    global $wpdb ;
+    $table = $wpdb->prefix . 'users';
+    $sql = 'ALTER TABLE ' . $table . ' ADD api_token VARCHAR(255);';
+    $wpdb->query($sql);
+}
 //ToDo: On Uninstall remove api_token from users table
+
+register_deactivation_hook(__FILE__, 'spf_uninstall_plugin');
+
+function spf_uninstall_plugin(){
+    global $wpdb;
+    $table = $wpdb->prefix . 'users';
+    $sql = 'ALTER TABLE ' . $table .
+    ' DROP COLUMN api_token ;';
+    $wpdb->query($sql);
+}
+
+function spf_register_route(){
+    register_rest_route('wooapp/v1','/shop/products',Array(
+        'methods' => 'GET',
+        'callback' => 'spf_get_shop_products',
+    ));
+}
+
+add_action('rest_api_init','spf_register_route');
+
+function spf_get_shop_products(){
+wp_send_json([
+    'message' => 'thank you the endpoint is fine'
+], 200);
+}
+
+
 //ToDo: On User Register
 //ToDo: Generate to api_token (unique)
 //ToDo: Generate api authentication endpoints
