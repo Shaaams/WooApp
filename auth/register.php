@@ -14,11 +14,12 @@ function spf_register_new_user( $request ){
 
     //if success request return user id
     $user_id = wp_create_user($params['email'], $params['password'], $params['email']);
-
+    update_user_meta($user_id, 'first_name', $params['first_name']);
+    update_user_meta($user_id, 'last_name', $params['last_name']);
     global $wpdb;
     $table = $wpdb->prefix . 'users';
     $query =$wpdb->update($table, ['api_token' => $api_token], ['ID' => $user_id]);
-
+            
         wp_send_json([
             'user_id'    => $user_id,
             'api_token'  => $api_token,

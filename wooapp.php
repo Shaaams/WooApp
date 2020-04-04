@@ -12,6 +12,7 @@ Namespace wooapp
 */
 defined('ABSPATH') or die('No Script kiddies Please');
 require_once 'auth/register.php';
+require_once  'auth/login.php';
 
 //ToDo: Add api_token to users table
 
@@ -44,6 +45,11 @@ function spf_register_route(){
     register_rest_route('wooapp/v1', '/auth/register', [
         'methods'  => 'POST',
         'callback' => 'spf_register_new_user',
+    ]);
+
+    register_rest_route('wooapp/v1', '/auth/login', [
+       'methods'  => 'POST',
+       'callback' => 'spf_login_user',
     ]);
 }
 
