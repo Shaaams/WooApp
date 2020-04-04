@@ -11,6 +11,7 @@ Text Domain:  wooapp
 Namespace wooapp
 */
 defined('ABSPATH') or die('No Script kiddies Please');
+require_once 'auth/register.php';
 
 //ToDo: Add api_token to users table
 
@@ -33,24 +34,32 @@ function spf_uninstall_plugin(){
     ' DROP COLUMN api_token ;';
     $wpdb->query($sql);
 }
-
+// Register All Routes For All End Points
 function spf_register_route(){
     register_rest_route('wooapp/v1','/shop/products',Array(
-        'methods' => 'GET',
+        'methods'  => 'GET',
         'callback' => 'spf_get_shop_products',
     ));
+
+    register_rest_route('wooapp/v1', '/auth/register', [
+        'methods'  => 'POST',
+        'callback' => 'spf_register_new_user',
+    ]);
 }
 
 add_action('rest_api_init','spf_register_route');
-
+// function for fetch all products
 function spf_get_shop_products(){
 wp_send_json([
     'message' => 'thank you the endpoint is fine'
 ], 200);
 }
 
-
 //ToDo: On User Register
+//function for register new user
+
+
+
 //ToDo: Generate to api_token (unique)
 //ToDo: Generate api authentication endpoints
    //ToDo: Register API  /wooapp/api/register -> method (POST)-> WP_User (api_token)
